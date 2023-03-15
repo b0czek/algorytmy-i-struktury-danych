@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,6 +21,12 @@ public class Main {
         for(int elem : array) {
             System.out.print(elem + " ");
         }
+        System.out.println();
 
+        Iterator<Integer> iter = array.iterator(2);
+        while(iter.hasNext()) {
+            System.out.print(iter.next() + " ");
+
+        }
     }
 }

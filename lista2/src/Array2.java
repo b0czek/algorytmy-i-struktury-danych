@@ -54,4 +54,8 @@ public class Array2<T> implements Iterable<T> {
     public Iterator<T> iterator() {
         return new Array2Iterator<>(this);
     }
+
+    public Iterator<T> iterator(int n) {
+        return new Array2SkipIterator<>(this, n);
+    }
 }
