@@ -3,7 +3,7 @@ import java.util.ListIterator;
 import java.util.Objects;
 
 public class OneWayLinkedListWithSentinel<E> implements IList<E> {
-    private Element head = new Element(null, null);
+    private final Element head = new Element(null, null);
 
     @Override
     public boolean add(E value) {
@@ -17,10 +17,8 @@ public class OneWayLinkedListWithSentinel<E> implements IList<E> {
 
     @Override
     public boolean add(int index, E value) {
-        Element prevElement = this.getElement(index - 1);
-        if(prevElement == null) {
-            return false;
-        }
+        Element prevElement = this.getElement(index - 1, true);
+
         Element element = new Element(value, prevElement.getNext());
         prevElement.setNext(element);
 
@@ -39,20 +37,17 @@ public class OneWayLinkedListWithSentinel<E> implements IList<E> {
 
     @Override
     public E get(int index) {
-        Element element = this.getElement(index);
-        if(element == null) {
-            return null;
-        }
+        Element element = this.getElement(index, false);
         return element.getValue();
     }
 
     @Override
     public E set(int index, E value) {
-        Element element = this.getElement(index);
-        if(element == null) {
-            return null;
-        }
-        return null;
+        Element element = this.getElement(index, false);
+        E prevValue = element.getValue();
+        element.setValue(value);
+
+        return prevValue;
     }
 
     @Override
@@ -82,9 +77,10 @@ public class OneWayLinkedListWithSentinel<E> implements IList<E> {
 
     @Override
     public E remove(int index) {
-        Element prevElement = this.getElement(index - 1);
-        if(prevElement == null) {
-            return null;
+        Element prevElement = this.getElement(index - 1, true);
+        if(prevElement.getNext() == null) {
+            throw new IndexOutOfBoundsException("index=" + index + "out of range, list size=" + this.size());
+
         }
         E value = prevElement.getNext().getValue();
         prevElement.setNext(prevElement.getNext().getNext());
@@ -111,11 +107,17 @@ public class OneWayLinkedListWithSentinel<E> implements IList<E> {
         return size;
     }
 
-    private Element getElement(int index) {
+    private Element getElement(int index, boolean allowGettingSentinel) {
+        if(index < (allowGettingSentinel ? -1 : 0)) {
+            throw new IndexOutOfBoundsException("index value was negative, index=" + index);
+        }
         Element element = this.head;
         int idx = 0;
         while(idx <= index && (element = element.getNext()) != null) {
             idx++;
+        }
+        if(element == null) {
+            throw new IndexOutOfBoundsException("index=" + index + "out of range, list size=" + this.size());
         }
         return element;
 
@@ -156,4 +158,15 @@ public class OneWayLinkedListWithSentinel<E> implements IList<E> {
             this.next = next;
         }
     }
+
+    public Object[] asArray() {
+        int size = this.size();
+        Object[] array = new Object[size];
+        Element el = this.head.getNext();
+        for(int i = 0; i < size; i++, el = el.getNext()) {
+            array[i] = el.getValue();
+        }
+        return array;
+    }
+
 }
