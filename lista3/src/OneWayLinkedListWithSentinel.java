@@ -107,6 +107,41 @@ public class OneWayLinkedListWithSentinel<E> implements IList<E> {
         return size;
     }
 
+    public boolean isPalindrome() {
+        if(this.head.getNext() == null) {
+            return true;
+        }
+        return pHelper(this.head.getNext(), 1) != null ;
+    }
+
+    private PalindromeReturn pHelper(Element element, int length) {
+        PalindromeReturn next = element.getNext() == null ? new PalindromeReturn(this.head.getNext(), length) : pHelper(element.getNext(), length + 1);
+
+        if(next == null) {
+            return null;
+        }
+        if((next.length / 2) >= length) {
+            return next;
+
+        }
+        if(!Objects.equals(element.getValue(), next.element.getValue())) {
+            return null;
+        }
+        next.element = next.element.getNext();
+        return next;
+    }
+
+    private class PalindromeReturn {
+        Element element;
+        int length;
+
+        public PalindromeReturn(Element element, int length) {
+            this.element = element;
+            this.length = length;
+        }
+    }
+
+
     private Element getElement(int index, boolean allowGettingSentinel) {
         if(index < (allowGettingSentinel ? -1 : 0)) {
             throw new IndexOutOfBoundsException("index value was negative, index=" + index);
