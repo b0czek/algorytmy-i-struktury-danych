@@ -5,8 +5,8 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OneWayLinkedListWithSentinelTest {
-    private OneWayLinkedListWithSentinel<Integer> list;
+class TwoWayLinkedListTest {
+    private TwoWayLinkedList<Integer> list;
 
 
 
@@ -25,7 +25,7 @@ class OneWayLinkedListWithSentinelTest {
 
     @BeforeEach
     public void init() {
-        list = new OneWayLinkedListWithSentinel<>();
+        list = new TwoWayLinkedList<>();
     }
 
     @Test
@@ -179,34 +179,5 @@ class OneWayLinkedListWithSentinelTest {
         assertEquals(10, list.size());
     }
 
-
-    @Test
-    void isPalindrome() {
-        assertTrue(list.isPalindrome());
-        this.add10IntegersToList();
-        assertFalse(list.isPalindrome());
-
-
-        this.list.clear();
-        this.list.add(1);
-        assertTrue(list.isPalindrome());
-        this.list.add(2);
-        assertFalse(list.isPalindrome());
-        this.list.add(1);
-        assertTrue(list.isPalindrome());
-
-        this.list.clear();
-        this.list.add(1);
-        this.list.add(2);
-        this.list.add(2);
-        this.list.add(1);
-        assertTrue(list.isPalindrome());
-
-        this.list.add(2);
-        this.list.add(2);
-        this.list.add(1);
-        assertTrue(list.isPalindrome());
-
-    }
 
 }
