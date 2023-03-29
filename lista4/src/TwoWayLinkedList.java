@@ -22,7 +22,6 @@ public class TwoWayLinkedList<E> implements IList<E> {
         if(index > this.size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-
         if(size == index || size == 0) {
             this.add(value);
             return true;
@@ -139,11 +138,21 @@ public class TwoWayLinkedList<E> implements IList<E> {
             throw new IndexOutOfBoundsException();
         }
 
-        Element e = this.head;
-        while(index > 0) {
-            index--;
-            e = e.getNext();
+        Element e;
+        if(index > this.size / 2) {
+            e = this.tail;
+            while(index < this.size - 1) {
+                index++;
+                e = e.getPrevious();
+            }
+        } else {
+            e = this.head;
+            while(index > 0) {
+                index--;
+                e = e.getNext();
+            }
         }
+
         return e;
     }
 

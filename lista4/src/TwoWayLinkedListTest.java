@@ -63,8 +63,14 @@ class TwoWayLinkedListTest {
         assertArrayEquals(new Integer[]{0,1,2,3,4,5,6,7,8,9,null}, list.asArray());
 
 
+        list.add(5, 50);
+        assertArrayEquals(new Integer[]{0,1,2,3,4,50, 5,6,7,8,9,null}, list.asArray());
+
+
+
         list.add(10, 10);
-        assertArrayEquals(new Integer[]{0,1,2,3,4,5,6,7,8,9,10,null}, list.asArray());
+        assertArrayEquals(new Integer[]{0,1,2,3,4,50, 5,6,7,8,10,9,null}, list.asArray());
+
 
 
     }
