@@ -1,4 +1,5 @@
 
+import java.io.*;
 import java.util.Comparator;
 import java.util.function.Function;
 
@@ -10,20 +11,20 @@ import testing.generation.conversion.*;
 
 public class Main {
 
-	private static final int maxValue = 100;
+	private static final int maxValue = 1000;
 
 	private static final Generator<Integer>[] generators = new Generator[] {
 			new OrderedIntegerArrayGenerator(),
-			new ReversedIntegerArrayGenerator(),
-			new ShuffledIntegerArrayGenerator(),
-			new RandomIntegerArrayGenerator(maxValue),
+//			new ReversedIntegerArrayGenerator(),
+//			new ShuffledIntegerArrayGenerator(),
+//			new RandomIntegerArrayGenerator(maxValue),
 	};
 	private static final Comparator<MarkedValue<Integer>> markedComparator = new MarkedValueComparator<>(new IntegerComparator());
 
 	private static final SortingAlgorithm<MarkedValue<Integer>>[] algorithms = new SortingAlgorithm[] {
 			new BinaryInsertionSort(markedComparator),
-			new MinmaxSort(markedComparator),
-			new ShakerSort(markedComparator)
+//			new MinmaxSort(markedComparator),
+//			new ShakerSort(markedComparator)
 
 	};
 
@@ -32,48 +33,45 @@ public class Main {
 			(generator) -> new LinkedListGenerator<Integer>((Generator<Integer>)generator)
 	};
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream("result.txt"));
+		dos.writeUTF(csvHeader);
 		for(var algorithm : algorithms) {
 			for (var generator : generators) {
-				for (int i = 10; i <= 100000; i *= 10) {
-					for (int j = 1; j < 10; j++) {
-						Result result = Tester.runNTimes(algorithm, new MarkingGenerator<>(generator), i * j, 20);
-						printStatistic("time [ms]", result.averageTimeInMilliseconds(), result.timeStandardDeviation());
-						printStatistic("comparisons", result.averageComparisons(), result.comparisonsStandardDeviation());
-						printStatistic("swaps", result.averageSwaps(), result.swapsStandardDeviation());
+				for (int i = 10; i <= 10000; i *= 10) {
+					for (int j = 2; j <= 10; j++) {
+						int size = i * j;
+						Result result = Tester.runNTimes(algorithm, new MarkingGenerator<>(generator), size, 20);
+						writeResult(dos, algorithm, generator, size, result);
 
-						System.out.println("always sorted: " + result.sorted());
-						System.out.println("always stable: " + result.stable());
 					}
 				}
 			}
 		}
-		Comparator<MarkedValue<Integer>> markedComparator = new MarkedValueComparator<>(new IntegerComparator());
-
-		Generator<MarkedValue<Integer>> generator = new MarkingGenerator<>(new RandomIntegerArrayGenerator(100));
-
-		SortingAlgorithm<MarkedValue<Integer>> algorithm = new BinaryInsertionSort<>(markedComparator);
-		
-		Result result = Tester.runNTimes(algorithm, generator, 1000, 20);
-		
-		printStatistic("time [ms]", result.averageTimeInMilliseconds(), result.timeStandardDeviation());
-		printStatistic("comparisons", result.averageComparisons(), result.comparisonsStandardDeviation());
-		printStatistic("swaps", result.averageSwaps(), result.swapsStandardDeviation());
-		
-		System.out.println("always sorted: " + result.sorted());
-		System.out.println("always stable: " + result.stable());
+		dos.close();
 	}
 
-//	private static void
+	private static final String csvHeader = "algorithm;generator;size;avg_time;time_deviation;avg_comparisons;comparisons_deviation;avg_swaps;swaps_deviation;sorted;stable\n";
 
-	private static void printStatistic(String label, double average, double stdDev) {
-		System.out.println(label + ": " + double2String(average) + " +- " + double2String(stdDev));
-	}
-	
-	private static String double2String(double value) {
-		return String.format("%.12f", value);
+
+	private static <T,V> void writeResult(DataOutputStream dos, SortingAlgorithm<T> algorithm, Generator<V> generator, int size, Result result) throws IOException {
+		String output = String.format("%s;%s;%d;%.12f;%.12f;%.12f;%.12f;%.12f;%.12f;%s;%s\n",
+				algorithm.getClass().getSimpleName(),
+				generator.getClass().getSimpleName(),
+				size,
+				result.averageTimeInMilliseconds(),
+				result.timeStandardDeviation(),
+				result.averageComparisons(),
+				result.comparisonsStandardDeviation(),
+				result.averageSwaps(),
+				result.swapsStandardDeviation(),
+				result.sorted() ? "true" : "false",
+				result.stable() ? "true" : "false"
+			);
+		System.out.print(output);
+		dos.writeUTF(output);
 	}
 
 }

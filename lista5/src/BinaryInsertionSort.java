@@ -12,15 +12,11 @@ public class BinaryInsertionSort<T> extends SortingAlgorithm<T> {
         while(l <= r) {
             int m = (l+r) / 2;
             int compareResult = compare(element, list.get(m));
-            if(compareResult > 0) {
-                l = m + 1;
-            } else if(compareResult < 0){
+            if(compareResult < 0) {
                 r = m - 1;
             }
             else {
-                int size = list.size();
-                while(m != size - 1 && compare(element, list.get(++m)) == 0);
-                return m;
+                l = m + 1;
             }
         }
         return l;
