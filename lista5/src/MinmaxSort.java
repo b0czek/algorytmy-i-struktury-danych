@@ -39,6 +39,6 @@ public class MinmaxSort<T> extends SortingAlgorithm<T> {
 
             }
         }
-        return null;
+        return list;
     }
 }

@@ -15,16 +15,16 @@ public class Main {
 
 	private static final Generator<Integer>[] generators = new Generator[] {
 			new OrderedIntegerArrayGenerator(),
-//			new ReversedIntegerArrayGenerator(),
-//			new ShuffledIntegerArrayGenerator(),
-//			new RandomIntegerArrayGenerator(maxValue),
+			new ReversedIntegerArrayGenerator(),
+			new ShuffledIntegerArrayGenerator(),
+			new RandomIntegerArrayGenerator(maxValue),
 	};
 	private static final Comparator<MarkedValue<Integer>> markedComparator = new MarkedValueComparator<>(new IntegerComparator());
 
 	private static final SortingAlgorithm<MarkedValue<Integer>>[] algorithms = new SortingAlgorithm[] {
 			new BinaryInsertionSort(markedComparator),
-//			new MinmaxSort(markedComparator),
-//			new ShakerSort(markedComparator)
+			new MinmaxSort(markedComparator),
+			new ShakerSort(markedComparator)
 
 	};
 
