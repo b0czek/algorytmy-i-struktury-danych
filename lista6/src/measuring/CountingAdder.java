@@ -7,4 +7,8 @@ public class CountingAdder<T> extends Counter {
         list.add(value);
         increment();
     }
+    public void addLast(List<List<T>> list, List<T> value) {
+        list.add(value);
+        increment();
+    }
 }

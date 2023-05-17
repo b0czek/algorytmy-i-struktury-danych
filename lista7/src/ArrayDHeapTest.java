@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-class Array3HeapTest {
-    private Array3Heap<Integer> heap;
+class ArrayDHeapTest {
+    private ArrayDHeap<Integer> heap;
     @BeforeEach
     void setup() {
-        heap = new Array3Heap<>(4, Integer::compareTo);
+        heap = new ArrayDHeap<>(4, 10, Integer::compareTo);
     }
 
     @org.junit.jupiter.api.Test
@@ -81,6 +81,12 @@ class Array3HeapTest {
         heap.add(14);
 
         assertEquals(heap.minimum(), 1);
+        assertEquals(heap.minimum(), 2);
+        assertEquals(heap.minimum(), 4);
+        assertEquals(heap.minimum(), 5);
+        assertEquals(heap.minimum(), 10);
+        assertEquals(heap.minimum(), 14);
+
 
 
     }

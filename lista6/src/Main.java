@@ -16,16 +16,16 @@ public class Main {
 	private static final int maxValue = 1000;
 
 	private static final Generator<Integer>[] generators = new Generator[] {
-				new OrderedIntegerArrayGenerator(),
-				new ReversedIntegerArrayGenerator(),
+			new OrderedIntegerArrayGenerator(),
+			new ReversedIntegerArrayGenerator(),
 			new ShuffledIntegerArrayGenerator(),
 			new RandomIntegerArrayGenerator(maxValue),
 	};
 	private static final Comparator<MarkedValue<Integer>> markedComparator = new MarkedValueComparator<>(new IntegerComparator());
 
 	private static final SortingAlgorithm<MarkedValue<Integer>>[] algorithms = new SortingAlgorithm[] {
-//			new MergeSort(markedComparator),
-//			new QuickSort(markedComparator, "QuickSort-FirstElement", (list, left, right) -> left),
+			new MergeSort(markedComparator),
+			new QuickSort(markedComparator, "QuickSort-FirstElement", (list, left, right) -> left),
 			new QuickSort(markedComparator, "QuickSort-RandomElement", (list, left, right) -> random.nextInt(right - left) + left),
 	};
 

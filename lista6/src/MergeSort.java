@@ -60,11 +60,12 @@ public class MergeSort<T> extends SortingAlgorithm<T> {
             List<T> l = e instanceof LinkedList ? new LinkedList<>() : new ArrayList<>();
             addLast(l, e);
             return l;
-        }).toList());
+        }).`toList`());
+
         while(merges.size() > 1) {
             List<T> merge1 = merges.removeFirst();
             List<T> merge2 = merges.removeFirst();
-            addLast((List<T>) merges, (T) this.merge(list, merge1, merge2));
+            addLast(merges, this.merge(list, merge1, merge2));
         }
 
         return merges.removeFirst();

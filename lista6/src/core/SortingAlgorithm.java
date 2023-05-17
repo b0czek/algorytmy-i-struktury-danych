@@ -52,6 +52,9 @@ public abstract class SortingAlgorithm<T> {
 	protected void addLast(List<T> list, T element) {
 		adder.addLast(list, element);
 	}
+	protected void addLast(List<List<T>> list, List<T> element) {
+		adder.addLast(list, element);
+	}
 
 	public abstract List<T> sort(List<T> list);
 
