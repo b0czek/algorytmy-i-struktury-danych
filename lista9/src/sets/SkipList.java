@@ -1,3 +1,5 @@
+package sets;
+
 import java.util.*;
 
 public class SkipList<T> implements ISet<T> {
@@ -19,9 +21,9 @@ public class SkipList<T> implements ISet<T> {
 
         Node<T> inserted = insert(element, head, head.references.length - 1);
 
-        if(inserted != null && inserted.n != inserted.references.length) {
+        if(inserted != null && head.references.length < inserted.references.length) {
             head.growReferencesArray(inserted.references.length);
-            int linksToAdd = inserted.references.length - inserted.n;
+            int linksToAdd = inserted.references.length - head.references.length;
             for(int i = 0; i < linksToAdd; i++) {
                 head.addReference(inserted);
             }
@@ -33,9 +35,9 @@ public class SkipList<T> implements ISet<T> {
             Node<T> next = node.references[i];
             int comparison = next == null ? 1 : comparator.compare(next.value, element);
             if(comparison > 0) {
-                Node<T> newNode = n == 0 ? new Node<>(element) : insert(element, node, n - 1);
-                if(newNode != null && newNode.references.length > n) {
-                    node.replaceReference(0, newNode);
+                Node<T> newNode = i == 0 ? new Node<>(element) : insert(element, node, i - 1);
+                if(newNode != null && newNode.references.length > i) {
+                    node.references[0] = newNode;
                     newNode.addReference(next);
                 }
                 return newNode;
@@ -53,11 +55,14 @@ public class SkipList<T> implements ISet<T> {
     @Override
     public boolean contains(T element) {
         Node<T> node = this.head;
-        for(int i = node.n - 1; i >= 0; i--){
+        for(int i = node.references.length - 1; i >= 0; i--){
+            if(node.references[i] == null) {
+                continue;
+            }
             int comparison = comparator.compare(node.references[i].value, element);
             if(comparison < 0) {
                 node = node.references[i];
-                i = node.n;
+                i = node.references.length;
             }
             else if(comparison == 0) {
                 return true;
@@ -69,32 +74,39 @@ public class SkipList<T> implements ISet<T> {
 
     @Override
     public boolean remove(T element) {
-        return remove(element, head, head.n - 1) != null;
+        return remove(element, head, head.references.length - 1) != null;
     }
 
     private Node<T> remove(T element, Node<T> node, int n) {
         for(int i = n; i >= 0; i--) {
             Node<T> next = node.references[i];
+            if(next == null) {
+                continue;
+            }
             int comparison = comparator.compare(next.value, element);
             if(comparison == 0) {
-                Node<T> removedNode = n == 0 ? next : remove(element, node, n - 1);
+                Node<T> removedNode = i == 0 ? next : remove(element, node, i - 1);
                 if(removedNode != null) {
-                    node.references[n] = next.references[n];
+                    node.references[i] = next.references[i];
 
                 }
                 return removedNode;
             }
             else if(comparison < 0) {
                 node = next;
-                i = node.n;
+                i = node.references.length;
             }
         }
         return null;
     }
 
+    @Override
+    public String getName() {
+        return "SkipList.p" + p;
+    }
+
     private class Node<T> {
         T value;
-        int n = 0;
         Node<T>[] references;
 
         Node(T value) {
@@ -114,20 +126,13 @@ public class SkipList<T> implements ISet<T> {
         }
 
         void addReference(Node node) {
-            if(n == references.length) {
-                throw new IllegalStateException("node already has the references list full");
+            for(int i = 0 ; i < references.length; i++) {
+                if(references[i] == null) {
+                    references[i] = node;
+                    return;
+                }
             }
-            references[n] = node;
-            n++;
-        }
-        void removeLast() {
-            references[--n] = null;
-        }
-        void replaceReference(int idx, Node reference) {
-            if(this.references[idx] == null) {
-                n++;
-            }
-            this.references[idx] = reference;
+            throw new IllegalStateException("node already has the references list full");
         }
 
         void growReferencesArray(int newSize) {
@@ -141,4 +146,5 @@ public class SkipList<T> implements ISet<T> {
 
 
     }
+
 }

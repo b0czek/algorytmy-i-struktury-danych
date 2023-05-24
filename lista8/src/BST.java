@@ -12,71 +12,46 @@ public class BST<T> {
     }
 
     public T find(T value) {
-        Node result = search(root, value);
+        if(root == null) {
+            return null;
+        }
+        Node result = root.search(value);
         return result == null ? null : result.value;
-    }
-
-    private Node search(Node node, T value) {
-        if(node == null || Objects.equals(node.value, value)) {
-            return node;
-        }
-        if(comparator.compare(node.value, value) > 0) {
-            return search(node.left, value);
-        }
-        else {
-            return search(node.right, value);
-        }
     }
 
     public T minimum() {
         if(root == null) {
             return null;
         }
-        return min(root);
-    }
-
-    private T min(Node node) {
-        if(node.left != null) {
-            return min(node.left);
-        }
-        return node.value;
+        return root.min();
     }
 
     public T maximum() {
         if(root == null) {
             return null;
         }
-        return max(root);
+        return root.max();
     }
 
-    private T max(Node node) {
-        if(node.right != null) {
-            return max(node.right);
-        }
-        return node.value;
-    }
+
 
     public <R> void preOrderWalk(Executor<T, R> executor) {
         if(root == null) {
             return;
         }
-        preOrderWalk(root, executor);
-    }
-    private <R> void preOrderWalk(Node node, Executor<T, R> executor){
-        if(node != null) {
-            executor.execute(node.value);
-            preOrderWalk(node.left, executor);
-            preOrderWalk(node.right, executor);
-        }
+        root.preOrderWalk(executor);
     }
 
     public T successor(T value) {
-        Node node = search(root, value);
+        if(root == null) {
+            throw new IllegalArgumentException("tree is empty");
+        }
+        Node node = root.search(value);
         if(node == null) {
-            return null;
+            throw new IllegalArgumentException("value not present in the tree");
         }
         if(node.right != null) {
-            return min(node.right);
+            return node.right.min();
         }
         Node r = this.root;
         Node successor = null;
@@ -116,6 +91,9 @@ public class BST<T> {
             else if (compareResult < 0) {
                 prev = temp;
                 temp = temp.right;
+            }
+            else {
+                throw new IllegalArgumentException("value already present");
             }
         }
         int compareResult = comparator.compare(prev.value, value);
@@ -184,6 +162,44 @@ public class BST<T> {
 
         Node(T value) {
             this.value = value;
+        }
+
+        public Node search(T v) {
+            if(Objects.equals(this.value, v)) {
+                return this;
+            }
+            int compareResult = comparator.compare(this.value, v);
+            if(compareResult > 0 && this.left != null) {
+                return this.left.search(v);
+            }
+            else if(compareResult < 0 && this.right != null){
+                return this.right.search(v);
+            }
+            return null;
+        }
+        public T min() {
+            if(this.left != null) {
+                return this.left.min();
+            }
+            return this.value;
+        }
+        public T max() {
+            if(this.right != null) {
+                return this.right.max();
+            }
+            return this.value;
+        }
+        public <R> void preOrderWalk(Executor<T, R> executor){
+
+            executor.execute(value);
+            if(left != null) {
+                left.preOrderWalk(executor);
+            }
+            if(right != null) {
+
+                right.preOrderWalk(executor);
+            }
+
         }
     }
 

@@ -1,5 +1,6 @@
+package sets;
+
 import java.util.Comparator;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class BSTSet<T> implements ISet<T> {
@@ -195,5 +196,10 @@ public class BSTSet<T> implements ISet<T> {
     public interface Executor<T, R> {
         void execute(T value);
         R getResult();
+    }
+
+    @Override
+    public String getName() {
+        return "BSTSet";
     }
 }

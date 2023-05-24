@@ -1,3 +1,5 @@
+package sets;
+
 import java.util.Comparator;
 import java.util.TreeSet;
 
@@ -21,6 +23,11 @@ public class RBSet<T> implements ISet<T> {
 
     @Override
     public boolean remove(T element) {
-        return treeSet.remove(element);
+        return this.treeSet.remove(element);
+    }
+
+    @Override
+    public String getName() {
+        return "RBSet";
     }
 }

@@ -83,14 +83,16 @@ class BSTTest {
         assertEquals(12, bst.successor(10));
         assertNull(bst.successor(12));
 
-        assertNull(bst.successor(20));
+        assertThrowsExactly(IllegalArgumentException.class, () -> bst.successor(20));
     }
 
     @org.junit.jupiter.api.Test
     void insert() {
         assertThrowsExactly(IllegalArgumentException.class, () -> bst.insert(null));
 
+        add();
 
+        assertThrowsExactly(IllegalArgumentException.class, () -> bst.insert(7));
     }
 
     @org.junit.jupiter.api.Test
