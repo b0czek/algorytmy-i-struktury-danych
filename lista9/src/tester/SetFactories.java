@@ -13,7 +13,7 @@ public class SetFactories {
         return new Supplier[] {
                 () -> new BSTSet<T>(comparator),
                 () -> new RBSet<T>(comparator),
-                () -> new SkipList<T>(comparator, 0.0),
+//                () -> new SkipList<T>(comparator, 0.0),
                 () -> new SkipList<T>(comparator, 0.25),
                 () -> new SkipList<T>(comparator, 0.5),
                 () -> new SkipList<T>(comparator, 0.8),

@@ -34,72 +34,6 @@ public class BSTSet<T> implements ISet<T> {
         }
     }
 
-    public T minimum() {
-        if(root == null) {
-            return null;
-        }
-        return min(root);
-    }
-
-    private T min(Node node) {
-        if(node.left != null) {
-            return min(node.left);
-        }
-        return node.value;
-    }
-
-    public T maximum() {
-        if(root == null) {
-            return null;
-        }
-        return max(root);
-    }
-
-    private T max(Node node) {
-        if(node.right != null) {
-            return max(node.right);
-        }
-        return node.value;
-    }
-
-    public <R> void preOrderWalk(Executor<T, R> executor) {
-        if(root == null) {
-            return;
-        }
-        preOrderWalk(root, executor);
-    }
-    private <R> void preOrderWalk(Node node, Executor<T, R> executor){
-        if(node != null) {
-            executor.execute(node.value);
-            preOrderWalk(node.left, executor);
-            preOrderWalk(node.right, executor);
-        }
-    }
-
-    public T successor(T value) {
-        Node node = search(root, value);
-        if(node == null) {
-            return null;
-        }
-        if(node.right != null) {
-            return min(node.right);
-        }
-        Node r = this.root;
-        Node successor = null;
-        while(r != null) {
-            int compareResult = comparator.compare(node.value, r.value);
-            if(compareResult < 0) {
-                successor = r;
-                r = r.left;
-            }
-            else if(compareResult > 0) {
-                r = r.right;
-            } else {
-                break;
-            }
-        }
-        return successor == null ? null : successor.value;
-    }
 
     public void insert(T value) {
         if(value == null) {
@@ -193,10 +127,6 @@ public class BSTSet<T> implements ISet<T> {
         }
     }
 
-    public interface Executor<T, R> {
-        void execute(T value);
-        R getResult();
-    }
 
     @Override
     public String getName() {

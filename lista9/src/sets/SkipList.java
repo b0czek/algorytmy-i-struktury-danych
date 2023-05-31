@@ -22,8 +22,8 @@ public class SkipList<T> implements ISet<T> {
         Node<T> inserted = insert(element, head, head.references.length - 1);
 
         if(inserted != null && head.references.length < inserted.references.length) {
-            head.growReferencesArray(inserted.references.length);
             int linksToAdd = inserted.references.length - head.references.length;
+            head.growReferencesArray(inserted.references.length);
             for(int i = 0; i < linksToAdd; i++) {
                 head.addReference(inserted);
             }
@@ -31,20 +31,19 @@ public class SkipList<T> implements ISet<T> {
     }
 
     private Node<T> insert(T element, Node<T> node, int n) {
-        for(int i = n; i >= 0; i--) {
-            Node<T> next = node.references[i];
+        while(node != null) {
+            Node<T> next = node.references[n];
             int comparison = next == null ? 1 : comparator.compare(next.value, element);
             if(comparison > 0) {
-                Node<T> newNode = i == 0 ? new Node<>(element) : insert(element, node, i - 1);
-                if(newNode != null && newNode.references.length > i) {
-                    node.references[0] = newNode;
+                Node<T> newNode = n == 0 ? new Node<>(element) : insert(element, node, n - 1);
+                if(newNode != null && newNode.references.length > n) {
+                    node.references[n] = newNode;
                     newNode.addReference(next);
                 }
                 return newNode;
             }
             else if(comparison < 0) {
                 node = next;
-                i = node.references.length;
             } else {
                 return null;
             }
@@ -62,7 +61,6 @@ public class SkipList<T> implements ISet<T> {
             int comparison = comparator.compare(node.references[i].value, element);
             if(comparison < 0) {
                 node = node.references[i];
-                i = node.references.length;
             }
             else if(comparison == 0) {
                 return true;
@@ -126,6 +124,7 @@ public class SkipList<T> implements ISet<T> {
         }
 
         void addReference(Node node) {
+
             for(int i = 0 ; i < references.length; i++) {
                 if(references[i] == null) {
                     references[i] = node;
@@ -145,6 +144,14 @@ public class SkipList<T> implements ISet<T> {
         }
 
 
+        int referencesCount() {
+            for(int i = 0 ; i < references.length; i++) {
+                if(references[i] == null) {
+                    return i;
+                }
+            }
+            return 0;
+        }
     }
 
 }
