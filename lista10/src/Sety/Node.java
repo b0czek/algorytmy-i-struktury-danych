@@ -1,3 +1,5 @@
+package Sety;
+
 public class Node {
     private Node representant;
     private Node next;

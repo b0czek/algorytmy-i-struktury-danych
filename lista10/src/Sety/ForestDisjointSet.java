@@ -1,3 +1,5 @@
+package Sety;
+
 public class ForestDisjointSet implements DisjointSet<ForestNode> {
     @Override
     public ForestNode makeSet() {

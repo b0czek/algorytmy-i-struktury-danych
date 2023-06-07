@@ -1,3 +1,5 @@
+package Sety;
+
 public class ForestNode {
     ForestNode parent;
     int rank;

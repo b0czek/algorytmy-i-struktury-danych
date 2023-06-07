@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+package Sety;
 
 public class ListDisjointSet implements DisjointSet<Node>{
 
